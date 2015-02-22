@@ -1,0 +1,142 @@
+name:                   data-flip
+version:                0.9.0.0
+synopsis:               Data type that flipps last two of its type arguments.
+description:            TODO
+
+homepage:               https://github.com/trskop/data-flip
+bug-reports:            https://github.com/trskop/data-flip/issues
+license:                BSD3
+license-file:           LICENSE
+author:                 Peter Trško
+maintainer:             peter.trsko@gmail.com
+copyright:              (c) 2013-2015 Peter Trško
+category:               Data
+build-type:             Simple
+cabal-version:          >=1.8
+
+extra-source-files:
+    README.md
+  , ChangeLog.md
+
+flag pedantic
+  description:          Pass additional warning flags to GHC.
+  default:              False
+  manual:               True
+
+flag with-comonad
+  description:          Define various Comonad instances.
+  default:              True
+
+flag with-deepseq
+  description:          Derive NFData instance for Flip.
+  default:              True
+
+library
+  hs-source-dirs:       src
+  exposed-modules:
+      Data.Flip
+    , Data.Flip.Lens
+
+  build-depends:
+      base > 3 && < 5
+    , between ==0.9.*
+
+--if flag(with-transformers)
+--  build-depends:      transformers
+--  cpp-options:        -DWITH_TRANSFORMERS
+
+  if flag(with-comonad)
+    build-depends:      comonad >= 3.0.1.1 && < 4
+    cpp-options:        -DWITH_COMONAD
+
+  if flag(with-deepseq)
+    build-depends:      deepseq >= 1.1.0.0 && < 2
+    cpp-options:        -DWITH_DEEPSEQ
+
+  -- {{{ Language extensions --------------------------------------------------
+
+  other-extensions:
+      CPP
+    , FlexibleContexts
+    , FlexibleInstances
+
+  if impl(ghc >= 7.8.1)
+    -- GHC 7.8.1 introduced kind polymorphic Typeable class.
+    --
+    -- For details see:
+    --   https://downloads.haskell.org/~ghc/7.8.1/docs/html/users_guide/release-7-8-1.html
+    cpp-options:        -DLANGUAGE_DERIVE_DATA_TYPEABLE
+    other-extensions:   DeriveDataTypeable
+
+  if impl(ghc >= 7.6.1)
+    -- GHC 7.6.1 fully supports polymorphic kinds and data promotion.
+    --
+    -- For details see:
+    --   https://downloads.haskell.org/~ghc/7.6.1/docs/html/users_guide/release-7-6-1.html
+    cpp-options:        -DLANGUAGE_POLY_KINDS
+    other-extensions:   PolyKinds
+
+  if impl(ghc >= 7.2.1)
+    -- GHC 7.2.1 introduced -XDeriveGeneric language extension.
+    --
+    -- For details see:
+    --   https://downloads.haskell.org/~ghc/7.2.1/docs/html/users_guide/release-7-2-1.html
+    cpp-options:        -DLANGUAGE_DERIVE_GENERIC
+    other-extensions:   DeriveGeneric
+
+  -- }}} Language extensions --------------------------------------------------
+
+  ghc-options:          -Wall
+  if flag(pedantic)
+    ghc-options:
+      -fwarn-tabs
+      -fwarn-implicit-prelude
+--    -Werror
+
+--test-suite unit-tests
+--  hs-source-dirs:       src, test
+--  type:                 exitcode-stdio-1.0
+--  main-is:              unit-tests-main.hs
+--  other-modules:
+--    , Data.Flip
+--    , TestCase
+--    , TestCase.Data.Flip
+--
+--  build-depends:
+--      base > 3 && < 5
+--    , between ==0.9.*
+--
+--    -- Test dependencies:
+--    , HUnit >= 1.2 && < 2
+--      -- ^ Same constraints as test-framework-hunit
+-- -- , QuickCheck >= 2.4 && < 2.6
+--      -- ^ Same constraints as test-framework-quickcheck2
+--    , test-framework >= 0.8 && < 1
+--      -- ^ Same constraint as test-framework-skip, other packages that
+--      -- depend on it have less restrictive bounds.
+--    , test-framework-hunit >= 0.2.6
+--      -- ^ Lower versions have more restrictive bounds on test-framework.
+-- -- , test-framework-quickcheck2 >= 0.3
+--      -- ^ There were changes in QuickCheck bounds in 0.2 branch and last one
+--      -- on it had a compilation failure on Hackage.
+--
+--      -- Not required right now:
+-- -- , test-framework-skip == 1.*
+--      -- ^ Currently there is only version 1.0.
+--  if flag(with-comonad)
+--    build-depends:      comonad >= 3.0.1.1 && < 4
+--    cpp-options:        -DWITH_COMONAD
+--  if flag(with-comonad) || flag(with-semigroups)
+--    build-depends:      semigroups >= 0.8.3 && < 1
+--    -- ^ Version range taken from comonad-3.0.2.
+--    cpp-options:        -DWITH_SEMIGROUPS
+--
+--  ghc-options:          -Wall
+--  if impl(ghc >= 6.8)
+--    ghc-options:        -fwarn-tabs
+--  if flag(pedantic)
+--    ghc-options:        -Werror
+
+source-repository head
+  type:                 git
+  location:             git://github.com/trskop/data-flip.git
