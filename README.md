@@ -1,34 +1,18 @@
-Not Found
-=========
+Flip
+====
 
-Over the years of their work Haskellers tend to create a lot of small utilities
-and types that they use in various places. It's not uncommon that such
-patchworks are published as a small, and also not so small, libraries. This
-library is one of those, and we will see in what category it ends up over time.
-
-All functions, types and instances in this library were at some point used in
-real world applications. One of the aspects of coding for user applications is
-that this library doesn't shy away from sensible language extensions.
-
-
-External Dependencies
----------------------
-
-* [*comonad*][comonad] (optional) -- Haskell 98 compatible comonads
-* [*semigroups*][semigroups] (optional) -- Haskell 98 semigroups
+Data type that flipps last two of its type arguments.
 
 
 Building options
 ----------------
 
 * `-fwith-comonad` (enabled by default)
-  Adds [*comonad*][comonad] to the list of dependencies and builds Comonad
-  instances for various types.
-* `-fwith-semigroups` (enabled by default)
-  Adds [*semigroups*][semigroups] to the list of dependencies and builds
-  Semigroup instances for various types. Implied by `-fwith-comonad`.
+  Define various `Comonad` instances.
+* `-fwith-deepseq` (enabled by default)
+  Define `NFData` instance for `Flip`.
 * `-fpedantic` (disabled by default)
-  Pass additional warning flags including `-Werror` to GHC during compilation.
+  Pass additional warning flags to GHC.
 
 
 Contributions
@@ -51,7 +35,7 @@ dependencies. See individual packages on hackage for details:
 
 * [base][]
 * [comonad][]
-* [semigroups][]
+* [deepseq][]
 
 
 [base]:
@@ -62,6 +46,6 @@ dependencies. See individual packages on hackage for details:
   http://hackage.haskell.org/package/comonad/
   "HackageDB: comonad"
 
-[semigroups]:
-  http://hackage.haskell.org/package/semigroups/
-  "HackageDB: semigroups"
+[deepseq]:
+  http://hackage.haskell.org/package/deepseq/
+  "HackageDB: deepseq"
