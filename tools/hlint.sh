@@ -1,29 +1,30 @@
-#!/bin/sh
+#!/bin/bash
 
-# Colorize output if it's a terminal
-if [ -t 1 ]; then
-    HLINT_FLAGS='--colour'
-fi
+main()
+{
 
-DIRS=''
-for PKG in '' not-found*; do
-    for D in 'src' 'test' 'tests'; do
-        if [ -n "$PKG" ]; then
-            D="$PKG/$D"
-        fi
-        if [ -d "$D" ]; then
-            if [ -z "$DIRS" ]; then
-                DIRS="$D"
-            else
-                DIRS="$DIRS $D"
-            fi
+    local -a hlint_flags=()
+    local -a dirs=()
+
+    # Colorize output if stdout is a terminal.
+    if [ -t 1 ]; then
+        hlint_flags=("${hlint_flags[@]}" '--colour')
+    fi
+
+    local dir=''
+    for dir in 'src' 'test' 'tests'; do
+        if [ -d "$dir" ]; then
+            dirs=("${dirs[@]}" "$dir")
         fi
     done
-done
 
-# Use current directory if no known subdirectories with source code were found.
-if [ -z "$DIRS" ]; then
-    DIRS='.'
-fi
+    # Use current directory if no known subdirectories with source code were
+    # found.
+    if (( "${#dirs}" == 0 )); then
+        dirs=('.')
+    fi
 
-hlint $HLINT_FLAGS $DIRS
+    hlint "${hlint_flags[@]}" "${dirs[@]}" "$@"
+}
+
+main "$@"
